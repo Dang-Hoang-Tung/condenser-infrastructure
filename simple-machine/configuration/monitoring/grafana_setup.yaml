@@ -1,0 +1,15 @@
+- name: Start the Node Exporter server
+  hosts: mgmtgroup
+  become: true
+  become_user: root
+  tasks:
+    - name: Install Grafana
+      ansible.builtin.dnf:
+        name:
+          - grafana
+        state: latest
+    - name: Start and enable Grafana service
+      ansible.builtin.systemd:
+        name: grafana-server
+        state: started
+        enabled: true

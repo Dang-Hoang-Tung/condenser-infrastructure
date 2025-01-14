@@ -1,0 +1,12 @@
+{
+        "version": "10",
+        "aliases": {
+                "local": {
+                        "url": "https://{{ansible_host}}:9000",
+                        "accessKey": "ucabhtd",
+                        "secretKey": "{{lookup('ansible.builtin.file','./.miniopass')}}",
+                        "api": "s3v4",
+                        "path": "auto"
+                }
+        }
+}

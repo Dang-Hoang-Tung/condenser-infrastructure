@@ -1,0 +1,3 @@
+{% for hostname in groups["workergroup"] %}
+{{hostvars[hostname].ansible_host}}
+{% endfor %}

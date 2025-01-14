@@ -1,0 +1,3 @@
+{% for hostname in hostvars %}
+{{hostvars[hostname].ansible_host}} {{hostname}}
+{% endfor %}
