@@ -34,7 +34,7 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
             if len(ips) == 1:
                 ansible_hosts.append(AnsibleHost(name, group, ips[0]))
             else:
-                new_hosts = [AnsibleHost(f'{name}{i}', group, ip) for i, ip in enumerate(ips)]
+                new_hosts = [AnsibleHost(f'{name}{idx+1}', group, ip) for idx, ip in enumerate(ips)]
                 ansible_hosts.extend(new_hosts)
         return ansible_hosts
     except subprocess.CalledProcessError as e:
