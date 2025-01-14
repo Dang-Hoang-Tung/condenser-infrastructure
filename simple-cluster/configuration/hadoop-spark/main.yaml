@@ -1,5 +1,0 @@
----
-- import_playbook: env_update.yaml
-- import_playbook: hadoop_install.yaml
-- import_playbook: cluster_start.yaml
-- import_playbook: spark_install.yaml

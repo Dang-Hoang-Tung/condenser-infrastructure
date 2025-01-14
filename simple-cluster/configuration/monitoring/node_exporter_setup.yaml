@@ -1,5 +1,5 @@
 - name: Start the Node Exporter server
-  hosts: workergroup
+  hosts: clientgroup
   become: true
   become_user: root
   tasks:

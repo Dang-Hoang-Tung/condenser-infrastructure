@@ -1,5 +1,5 @@
 - name: Start the Prometheus server
-  hosts: mgmtgroup
+  hosts: hostnode
   become: true
   become_user: root
   tasks:
