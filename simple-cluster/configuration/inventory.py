@@ -31,10 +31,11 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
         print(terraform_output)
         ansible_hosts: list[AnsibleHost] = []
         for item in terraform_output:
-            if len(item.ips) == 1:
-                ansible_hosts.append(AnsibleHost(item.name, item.group, item.ips[0]))
+            x = json.loads(item)
+            if len(x.ips) == 1:
+                ansible_hosts.append(AnsibleHost(x.name, x.group, x.ips[0]))
             else:
-                ansible_hosts.extend([AnsibleHost(item.name, item.group, ip) for ip in item.ips])
+                ansible_hosts.extend([AnsibleHost(x.name, x.group, ip) for ip in x.ips])
         return ansible_hosts
     except subprocess.CalledProcessError as e:
         print(f"Error executing Terraform: {e}", file=sys.stderr)
