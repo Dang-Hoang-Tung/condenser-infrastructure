@@ -44,7 +44,7 @@ variable "host_vm_ram" {
 
 variable "host_vm_hdd" {
   type    = string
-  default = "20Gi"
+  default = "50Gi"
 }
 
 variable "client_vm_cores" {
