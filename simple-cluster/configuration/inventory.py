@@ -8,8 +8,8 @@ import sys
 from dataclasses import dataclass
 
 # Terraform output variables - keep in sync!
-TERRAFORM_DIRECTORY = "infrastructure"
-TERRAFORM_ANSIBLE_KEY = "ansible_inventory"
+TERRAFORM_DIRECTORY_RELATIVE = '../infrastructure'
+TERRAFORM_ANSIBLE_KEY = 'ansible_inventory'
 
 @dataclass
 class AnsibleHost(dict):
@@ -25,7 +25,7 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
     current_script_dir = os.path.dirname(os.path.abspath(__file__))
 
     try:
-        os.chdir(f"{current_script_dir}/../{TERRAFORM_DIRECTORY}")
+        os.chdir(os.path.join(current_script_dir, TERRAFORM_DIRECTORY_RELATIVE))
         result = subprocess.run(['terraform', 'output', '--json', TERRAFORM_ANSIBLE_KEY], capture_output=True, encoding='UTF-8')
         terraform_output = json.loads(result.stdout)
         ansible_hosts: list[AnsibleHost] = []
@@ -34,7 +34,8 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
             if len(ips) == 1:
                 ansible_hosts.append(AnsibleHost(name, group, ips[0]))
             else:
-                ansible_hosts.extend([AnsibleHost(name, group, ip) for ip in ips])
+                new_hosts = [AnsibleHost(f'{name}{i}', group, ip) for i, ip in enumerate(ips)]
+                ansible_hosts.extend(new_hosts)
         return ansible_hosts
     except subprocess.CalledProcessError as e:
         print(f"Error executing Terraform: {e}", file=sys.stderr)
@@ -67,16 +68,16 @@ def generate_inventory():
     jd = json.dumps(_jd, indent=4)
     return jd
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     ap = argparse.ArgumentParser(
         description = "Generate a cluster inventory from Terraform.",
         prog = __file__
     )
 
     mo = ap.add_mutually_exclusive_group()
-    mo.add_argument("--list",action="store", nargs="*", default="dummy", help="Show JSON of all managed hosts")
-    mo.add_argument("--host",action="store", help="Display vars related to the host")
-    mo.add_argument("--test",action="store_true", help="Run test and print")
+    mo.add_argument('--list',action='store', nargs='*', default='dummy', help="Show JSON of all managed hosts")
+    mo.add_argument('--host',action='store', help='Display vars related to the host')
+    mo.add_argument('--test',action='store_true', help='Run test and print')
 
     args = ap.parse_args()
 
