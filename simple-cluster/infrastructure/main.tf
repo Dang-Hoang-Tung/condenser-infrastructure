@@ -100,7 +100,7 @@ module "client_vm" {
     condenser_ingress_cons_port                  = 9001
     condenser_ingress_cons_protocol              = "https"
     condenser_ingress_cons_nginx_proxy-body-size = "100000m"
-    condenser_ingress_nodeexporter_hostname      = "${local.hostnames.node_exporter}-${count.index + 1}"
+    condenser_ingress_nodeexporter_hostname      = "${local.hostnames.node_exporter}"
     condenser_ingress_nodeexporter_port          = 9100
     # condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
     # condenser_ingress_yarn_port             = 8042
