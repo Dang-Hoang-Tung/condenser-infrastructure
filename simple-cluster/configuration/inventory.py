@@ -57,7 +57,7 @@ def generate_inventory():
 
     for item in tf_ansible_output:
         # Map host name to IP address in hostvars object
-        _jd['hostvars'][item.name] = { 'ansible_host': item.ip }
+        _jd['_meta']['hostvars'][item.name] = { 'ansible_host': item.ip }
         # Add host to group
         if item.group not in _jd:
             _jd[item.group] = { 'hosts': [] }
