@@ -30,7 +30,7 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
         terraform_output = json.loads(result.stdout)
         ansible_hosts: list[AnsibleHost] = []
         for item in terraform_output:
-            ips = item['ips']
+            name, group, ips = item['name'], item['group'], item['ips']
             if len(ips) == 1:
                 ansible_hosts.append(AnsibleHost(item.name, item.group, ips[0]))
             else:
