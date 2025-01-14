@@ -50,19 +50,19 @@ def generate_inventory():
 
     _jd = {
         # Metadata
-        "_meta": { "hostvars": {} },
-        "all": { "children": [] },
-        "ungrouped": { "hosts": [] },
+        '_meta': { 'hostvars': {} },
+        'all': { 'children': [] },
+        'ungrouped': { 'hosts': [] },
     }
 
     for item in tf_ansible_output:
         # Map host name to IP address in hostvars object
-        _jd.hostvars[item.name] = { "ansible_host": item.ip }
+        _jd['hostvars'][item.name] = { 'ansible_host': item.ip }
         # Add host to group
         if item.group not in _jd:
-            _jd[item.group] = { "hosts": [] }
-            _jd.all.children.append(item.group)
-        _jd[item.group].hosts.append(item.name)
+            _jd[item.group] = { 'hosts': [] }
+            _jd['all']['children'].append(item.group)
+        _jd[item.group]['hosts'].append(item.name)
 
     jd = json.dumps(_jd, indent=4)
     return jd
