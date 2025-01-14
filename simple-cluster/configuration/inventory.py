@@ -28,6 +28,7 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
         os.chdir(f"{current_script_dir}/../{TERRAFORM_DIRECTORY}")
         result = subprocess.run(['terraform', 'output', '--json', TERRAFORM_ANSIBLE_KEY], capture_output=True, encoding='UTF-8')
         terraform_output = json.loads(result.stdout)
+        print(terraform_output)
         ansible_hosts: list[AnsibleHost] = []
         for item in terraform_output:
             if len(item.ips) == 1:
@@ -43,11 +44,6 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
         sys.exit(1)
     finally:
         os.chdir(working_dir)
-
-# def get_ips(ips_key):
-#     command = f"terraform output --json {ips_key}".split()
-#     output = subprocess.run(command, capture_output=True, encoding='UTF-8').stdout
-#     return json.loads(output)
 
 def generate_inventory():
     tf_ansible_output = get_terraform_ansible_output()
