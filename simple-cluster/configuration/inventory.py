@@ -28,8 +28,10 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
         os.chdir(f"{current_script_dir}/../{TERRAFORM_DIRECTORY}")
         result = subprocess.run(['terraform', 'output', '--json', TERRAFORM_ANSIBLE_KEY], capture_output=True, encoding='UTF-8')
         terraform_output = json.loads(result.stdout)
+        print(terraform_output)
         ansible_hosts: list[AnsibleHost] = []
         for item in terraform_output:
+            print(item)
             ips_ = json.loads(item.ips)
             if len(ips_) == 1:
                 ansible_hosts.append(AnsibleHost(item.name, item.group, ips_[0]))
