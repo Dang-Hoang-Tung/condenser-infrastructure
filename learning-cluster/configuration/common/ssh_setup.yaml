@@ -25,6 +25,11 @@
 - name: Distribute shared SSH keys and config
   hosts: all
   tasks:
+    - name: Create external access key
+      ansible.builtin.template:
+        src: ./files/id_arc.pub
+        dest: /home/almalinux/.ssh/id_arc.pub
+        mode: 0600
     - name: Send cluster private key
       ansible.builtin.copy:
         src: ./.generated/temp_id_ed25519/id_ed25519
@@ -38,6 +43,7 @@
     - name: Add public keys to authorized_keys
       ansible.builtin.shell: 
         cmd: |
+          cat /home/almalinux/.ssh/id_arc.pub >> /home/almalinux/.ssh/authorized_keys
           cat /home/almalinux/.ssh/id_ed25519.pub >> /home/almalinux/.ssh/authorized_keys
     - name: Send SSH config file
       ansible.builtin.copy:
