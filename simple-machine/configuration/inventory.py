@@ -5,33 +5,36 @@ import subprocess
 import argparse
 import os
 import sys
+from dataclasses import dataclass
 
 # Terraform output variables - keep in sync!
 TERRAFORM_DIRECTORY = "infrastructure"
-TERRAFORM_MGMT_IPS_KEY = "mgmt_vm_ips"
-TERRAFORM_STORAGE_IPS_KEY = "storage_vm_ips"
-TERRAFORM_WORKER_IPS_KEY = "worker_vm_ips"
+TERRAFORM_ANSIBLE_KEY = "ansible_inventory"
 
-# Ansible groups
-ANSIBLE_MGMT_GROUP = "mgmtgroup"
-ANSIBLE_STORAGE_GROUP = "storagegroup"
-ANSIBLE_WORKER_GROUP = "workergroup"
-ANSIBLE_ALL_GROUPS = [ANSIBLE_MGMT_GROUP, ANSIBLE_STORAGE_GROUP, ANSIBLE_WORKER_GROUP]
+@dataclass
+class AnsibleHost(dict):
+    """
+    An Ansible host expected from Terraform output
+    """
+    name: str
+    group: str
+    ip: str
 
-# Ansible hosts
-ANSIBLE_MGMT_NODE = "mgmtnode"
-ANSIBLE_STORAGE_NODE = "storagenode"
-ANSIBLE_WORKER_NODE_PREFIX = "workernode"
-
-def get_terraform_output(ips_key):
+def get_terraform_ansible_output() -> list[AnsibleHost]:
     working_dir = os.getcwd()
     current_script_dir = os.path.dirname(os.path.abspath(__file__))
 
     try:
         os.chdir(f"{current_script_dir}/../{TERRAFORM_DIRECTORY}")
-        result = subprocess.run(['terraform', 'output', '--json', ips_key], capture_output=True, encoding='UTF-8')
+        result = subprocess.run(['terraform', 'output', '--json', TERRAFORM_ANSIBLE_KEY], capture_output=True, encoding='UTF-8')
         terraform_output = json.loads(result.stdout)
-        return terraform_output
+        ansible_hosts: list[AnsibleHost] = []
+        for item in terraform_output:
+            if len(item.ips) == 1:
+                ansible_hosts.append(AnsibleHost(item.name, item.group, item.ips[0]))
+            else:
+                ansible_hosts.extend([AnsibleHost(item.name, item.group, ip) for ip in item.ips])
+        return ansible_hosts
     except subprocess.CalledProcessError as e:
         print(f"Error executing Terraform: {e}", file=sys.stderr)
         sys.exit(1)
@@ -47,32 +50,23 @@ def get_terraform_output(ips_key):
 #     return json.loads(output)
 
 def generate_inventory():
-    mgmt_ips = get_terraform_output(TERRAFORM_MGMT_IPS_KEY)
-    storage_ips = get_terraform_output(TERRAFORM_STORAGE_IPS_KEY)
-    worker_ips = get_terraform_output(TERRAFORM_WORKER_IPS_KEY)
-
-    host_vars = {
-        ANSIBLE_MGMT_NODE: { "ansible_host": mgmt_ips[0] },
-        ANSIBLE_STORAGE_NODE: { "ansible_host": storage_ips[0] },
-    }
-    
-    worker_nodes = []
-    for i, worker_ip in enumerate(worker_ips):
-        name = f"{ANSIBLE_WORKER_NODE_PREFIX}{i + 1}"
-        host_vars[name] = { "ansible_host": worker_ip }
-        worker_nodes.append(name)
+    tf_ansible_output = get_terraform_ansible_output()
 
     _jd = {
         # Metadata
-        "_meta": { "hostvars": host_vars},
-        "all": { "children": ANSIBLE_ALL_GROUPS },
+        "_meta": { "hostvars": {} },
+        "all": { "children": [] },
         "ungrouped": { "hosts": [] },
-
-        # Groups
-        ANSIBLE_MGMT_GROUP: { "hosts": [ANSIBLE_MGMT_NODE] },
-        ANSIBLE_STORAGE_GROUP: { "hosts": [ANSIBLE_STORAGE_NODE] },
-        ANSIBLE_WORKER_GROUP: { "hosts": worker_nodes },
     }
+
+    for item in tf_ansible_output:
+        # Map host name to IP address in hostvars object
+        _jd.hostvars[item.name] = { "ansible_host": item.ip }
+        # Add host to group
+        if item.group not in _jd:
+            _jd[item.group] = { "hosts": [] }
+            _jd.all.children.append(item.group)
+        _jd[item.group].hosts.append(item.name)
 
     jd = json.dumps(_jd, indent=4)
     return jd

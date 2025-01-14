@@ -17,3 +17,18 @@ output "client_vm_ids" {
 output "hostnames" {
   value = local.hostnames
 }
+
+output "ansible_inventory" {
+  value = [
+    {
+      name  = "hostnode"
+      group = "hostgroup"
+      ips    = module.host_vm.ip_addresses
+    },
+    {
+      name  = "clientnode"
+      group = "clientgroup"
+      ips    = module.client_vm.ip_addresses
+    }
+  ]
+}

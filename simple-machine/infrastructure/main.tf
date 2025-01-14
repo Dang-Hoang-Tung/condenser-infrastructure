@@ -58,8 +58,8 @@ module "host_vm" {
 
   tags = {
     # Ingress configurations
-    condenser_ingress_isEnabled           = true
-    condenser_ingress_isAllowed           = true
+    condenser_ingress_isEnabled = true
+    condenser_ingress_isAllowed = true
     # condenser_ingress_hdfs_hostname       = local.hostnames.hdfs
     # condenser_ingress_hdfs_port           = 9870
     # condenser_ingress_yarn_hostname       = local.hostnames.yarn
@@ -100,9 +100,9 @@ module "client_vm" {
     condenser_ingress_cons_port                  = 9001
     condenser_ingress_cons_protocol              = "https"
     condenser_ingress_cons_nginx_proxy-body-size = "100000m"
+    condenser_ingress_nodeexporter_hostname      = "${local.hostnames.node_exporter}-${count.index + 1}"
+    condenser_ingress_nodeexporter_port          = 9100
     # condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
     # condenser_ingress_yarn_port             = 8042
-    # condenser_ingress_nodeexporter_hostname = "${local.hostnames.node_exporter}-${count.index + 1}"
-    # condenser_ingress_nodeexporter_port     = 9100
   }
 }
