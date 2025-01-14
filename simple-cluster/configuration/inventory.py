@@ -27,15 +27,13 @@ def get_terraform_ansible_output() -> list[AnsibleHost]:
     try:
         os.chdir(f"{current_script_dir}/../{TERRAFORM_DIRECTORY}")
         result = subprocess.run(['terraform', 'output', '--json', TERRAFORM_ANSIBLE_KEY], capture_output=True, encoding='UTF-8')
-        terraform_output = json.loads(result.stdout)
-        print(terraform_output)
+        terraform_output = [json.loads(item) for item in json.loads(result.stdout)]
         ansible_hosts: list[AnsibleHost] = []
         for item in terraform_output:
-            x = json.loads(item)
-            if len(x.ips) == 1:
-                ansible_hosts.append(AnsibleHost(x.name, x.group, x.ips[0]))
+            if len(item.ips) == 1:
+                ansible_hosts.append(AnsibleHost(item.name, item.group, item.ips[0]))
             else:
-                ansible_hosts.extend([AnsibleHost(x.name, x.group, ip) for ip in x.ips])
+                ansible_hosts.extend([AnsibleHost(item.name, item.group, ip) for ip in item.ips])
         return ansible_hosts
     except subprocess.CalledProcessError as e:
         print(f"Error executing Terraform: {e}", file=sys.stderr)
