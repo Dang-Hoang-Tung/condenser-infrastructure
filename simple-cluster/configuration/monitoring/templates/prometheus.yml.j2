@@ -42,6 +42,6 @@ scrape_configs:
     # machine by default.
     static_configs:
       - targets:
-        {% for hostname in groups["workergroup"] %}
+        {% for hostname in groups["clientgroup"] %}
         - {{hostname}}:9100
         {% endfor %}
