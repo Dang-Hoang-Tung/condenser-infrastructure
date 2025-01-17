@@ -103,7 +103,8 @@ module "client_vm" {
     condenser_ingress_nodeexporter_hostname      = local.hostnames.node_exporter
     condenser_ingress_nodeexporter_port          = 9100
     # assign GPUS
-    condenser_gpu_cores                          = 1
+    condenser_gpu_cores                          = 4
+    condenser_gpu_memory                         = "16Gi"
     # condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
     # condenser_ingress_yarn_port             = 8042
   }
