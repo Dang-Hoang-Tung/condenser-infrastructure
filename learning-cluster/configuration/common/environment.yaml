@@ -33,6 +33,7 @@
           - conda
           - erlang
           - logrotate
+          - socat
         state: latest
 
     # Customize locale and time-zone
