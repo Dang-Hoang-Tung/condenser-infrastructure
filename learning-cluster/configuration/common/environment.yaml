@@ -34,6 +34,7 @@
           - erlang
           - logrotate
           - socat
+          - pika
         state: latest
 
     # Customize locale and time-zone
