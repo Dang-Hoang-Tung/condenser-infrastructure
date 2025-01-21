@@ -17,6 +17,7 @@ locals {
     grafana       = "grafana-${local.cluster_id}"
     minio_s3      = "s3-${local.cluster_id}"
     minio_console = "cons-${local.cluster_id}"
+    rabbitmq      = "rabbitmq-${local.cluster_id}"
   }
 }
 
@@ -102,6 +103,8 @@ module "client_vm" {
     condenser_ingress_cons_nginx_proxy-body-size = "100000m"
     condenser_ingress_nodeexporter_hostname      = local.hostnames.node_exporter
     condenser_ingress_nodeexporter_port          = 9100
+    condenser_ingress_rabbitmq_hostname          = local.hostnames.rabbitmq
+    condenser_ingress_rabbitmq_port              = 15672
     # assign GPUS
     # condenser_gpu_cores                          = 4
     # condenser_gpu_memory                         = "16Gi"
