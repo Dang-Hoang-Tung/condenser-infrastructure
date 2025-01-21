@@ -32,7 +32,6 @@
           - golang
           - conda
           - erlang
-          - rabbitmq-server
           - logrotate
         state: latest
 
