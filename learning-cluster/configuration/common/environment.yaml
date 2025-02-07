@@ -34,7 +34,6 @@
           - erlang
           - logrotate
           - socat
-          - pika
           - redis
         state: latest
 
