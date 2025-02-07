@@ -35,6 +35,7 @@
           - logrotate
           - socat
           - pika
+          - redis
         state: latest
 
     # Customize locale and time-zone
