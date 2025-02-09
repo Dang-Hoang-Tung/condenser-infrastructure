@@ -3,7 +3,7 @@
   become: true
   become_user: root
   tasks:
-    - name: Install dev tools, python3, java
+    - name: Install dev tools, languages, compilers
       ansible.builtin.dnf:
         name:
           - glibc-langpack-en
@@ -25,6 +25,10 @@
           - wget
           - unzip
           - ufw
+          - logrotate
+          - socat
+          - redis
+          # Languages
           - python3-devel
           - python3-pip
           - python3-virtualenv
@@ -32,9 +36,12 @@
           - golang
           - conda
           - erlang
-          - logrotate
-          - socat
-          - redis
+          # Compilers
+          - g++
+          - gfortran
+          - openmpi-devel
+          - openmpi
+          - python3-mpi4py-openmpi
         state: latest
 
     # Customize locale and time-zone

@@ -2,3 +2,4 @@
 - import_playbook: system_update.yaml
 - import_playbook: environment.yaml
 - import_playbook: ssh_setup.yaml
+- import_playbook: user_files.yaml
