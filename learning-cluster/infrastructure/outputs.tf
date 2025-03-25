@@ -15,7 +15,7 @@ output "ansible_inventory" {
     {
       name  = "clientnode"
       group = "clientgroup"
-      ips    = module.vm.ip_addresses
+      ips    = flatten(module.vm[*].ip_addresses)
     }
   ]
 }
