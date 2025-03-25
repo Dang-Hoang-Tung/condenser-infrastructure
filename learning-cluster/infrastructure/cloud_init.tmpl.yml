@@ -5,3 +5,4 @@ bootcmd:
 
 ssh_authorized_keys:
   - ${public_key_openssh}
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSkw97SvXrgP3mynUYRMje1BDym9r2oRkgKHOdXkOiB tonydang@eduroam-int-dhcp-97-67-111.ucl.ac.uk

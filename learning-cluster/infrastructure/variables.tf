@@ -32,32 +32,22 @@ variable "img_display_name" {
 
 # Machine specs
 
-variable "host_vm_cores" {
+variable "vm_count" {
   type    = number
-  default = 4
+  default = 2
 }
 
-variable "host_vm_ram" {
-  type    = string
-  default = "8Gi"
-}
-
-variable "host_vm_hdd" {
-  type    = string
-  default = "50Gi"
-}
-
-variable "client_vm_cores" {
+variable "vm_cores" {
   type    = number
   default = 8
 }
 
-variable "client_vm_ram" {
+variable "vm_ram" {
   type    = string
   default = "32Gi"
 }
 
-variable "client_vm_hdd" {
+variable "vm_hdd" {
   type    = string
   default = "50Gi"
 }
