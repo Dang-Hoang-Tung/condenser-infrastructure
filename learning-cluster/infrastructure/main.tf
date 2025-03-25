@@ -39,7 +39,7 @@ resource "harvester_cloudinit_secret" "cloud_config" {
 }
 
 # Management VM
-module "host_vm" {
+module "vm" {
   count = var.vm_count
   source = "./modules/virtual-machine"
 

@@ -1,17 +1,9 @@
-output "host_vm_ips" {
-  value = flatten(module.host_vm[*].ip_addresses)
+output "vm_ips" {
+  value = flatten(module.vm[*].ip_addresses)
 }
 
-output "host_vm_ids" {
-  value = module.host_vm[*].id
-}
-
-output "client_vm_ips" {
-  value = flatten(module.client_vm[*].ip_addresses)
-}
-
-output "client_vm_ids" {
-  value = module.client_vm[*].id
+output "vm_ids" {
+  value = module.vm[*].id
 }
 
 output "hostnames" {
@@ -20,11 +12,6 @@ output "hostnames" {
 
 output "ansible_inventory" {
   value = [
-    {
-      name  = "hostnode"
-      group = "hostgroup"
-      ips    = module.host_vm.ip_addresses
-    },
     {
       name  = "clientnode"
       group = "clientgroup"
