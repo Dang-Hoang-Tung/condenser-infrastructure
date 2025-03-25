@@ -2,7 +2,7 @@
 
 variable "cluster_name" {
   type    = string
-  default = "test-cluster"
+  default = "my-cluster"
 }
 
 variable "username" {
