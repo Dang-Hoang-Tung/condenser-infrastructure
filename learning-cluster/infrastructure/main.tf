@@ -43,8 +43,8 @@ module "vm" {
   count = var.vm_count
   source = "./modules/virtual-machine"
 
-  name        = local.cluster_id
-  description = "Cluster head node"
+  name        = "${local.cluster_id}${count.index + 1}"
+  description = "Cluster node"
   namespace   = var.namespace
 
   cores = var.vm_cores
