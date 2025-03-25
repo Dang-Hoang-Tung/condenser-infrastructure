@@ -15,7 +15,7 @@ output "ansible_inventory" {
     {
       name  = "clientnode"
       group = "clientgroup"
-      ips    = module.client_vm.ip_addresses
+      ips    = module.vm.ip_addresses
     }
   ]
 }
