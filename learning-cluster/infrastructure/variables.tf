@@ -39,15 +39,15 @@ variable "vm_count" {
 
 variable "vm_cores" {
   type    = number
-  default = 8
+  default = 18
 }
 
 variable "vm_ram" {
   type    = string
-  default = "32Gi"
+  default = "64Gi"
 }
 
 variable "vm_hdd" {
   type    = string
-  default = "50Gi"
+  default = "150Gi"
 }

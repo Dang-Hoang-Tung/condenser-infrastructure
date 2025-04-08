@@ -40,10 +40,9 @@ resource "harvester_cloudinit_secret" "cloud_config" {
 
 # Management VM
 module "vm" {
-  count = var.vm_count
   source = "./modules/virtual-machine"
 
-  name        = "${local.cluster_id}${count.index + 1}"
+  name        = "adl"
   description = "Cluster node"
   namespace   = var.namespace
 
